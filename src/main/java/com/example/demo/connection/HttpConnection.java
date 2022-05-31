@@ -10,8 +10,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
 
 public class HttpConnection {
     public static final String HTTP_STATUS_CODE = "httpStatusCode";
