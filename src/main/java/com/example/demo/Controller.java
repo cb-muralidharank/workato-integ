@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -37,25 +36,30 @@ public class Controller {
     }
 
     @GetMapping("customer")
-    public ResponseEntity<String> createCustomer(@RequestParam(name = "site", required = false) String siteId, @RequestParam(name = "email", required = false) String email, @RequestParam(name = "manifest_id", required = false) String manifestID, @RequestParam(name = "api_key", required = false) String apiKey) throws IOException, JSONException, InterruptedException {
-        if (StringUtils.isEmpty(siteId)) {
-            siteId = "0";
-        }
-        if (StringUtils.isEmpty(email)) {
-            email = "0@chargebee.com";
-        }
-
-        if (StringUtils.isEmpty(manifestID)) {
-            manifestID = "0";
-        }
-        if (StringUtils.isEmpty(apiKey)) {
-            apiKey = "0";
-        }
-        List result = Service.createOrGetCustomer(siteId, email,manifestID,apiKey);
-        return ResponseEntity.ok("Customer and Folder is created, recipe is imported");
+    public ResponseEntity<String> createCustomer(@RequestParam(name = "site") String siteId, @RequestParam(name = "email") String email, @RequestParam(name = "manifest_id") String manifestID, @RequestParam(name = "api_key") String apiKey, @RequestParam(name = "folder") String folder) throws Exception {
+//        if (StringUtils.isEmpty(siteId)) {
+//            siteId = "0";
+//        }
+//        if (StringUtils.isEmpty(email)) {
+//            email = "0@chargebee.com";
+//        }
+//
+//        if (StringUtils.isEmpty(manifestID)) {
+//            manifestID = "0";
+//        }
+//        if (StringUtils.isEmpty(apiKey)) {
+//            apiKey = "0";
+//        }
+//        if (StringUtils.isEmpty(folder)) {
+//            folder = "mailchimp";
+//        }
+        return ResponseEntity.ok(new Service().createOrGetCustomer(siteId, email, manifestID, apiKey,folder));
     }
 
-
+    @GetMapping("deleterecipe")
+    public ResponseEntity<String> deleteRecipe(@RequestParam(name = "customerid") Integer customerid, @RequestParam(name = "folderid") Integer folderId) throws Exception {
+        return ResponseEntity.ok(new Service().disconnect(customerid, folderId));
+    }
 }
 
 
