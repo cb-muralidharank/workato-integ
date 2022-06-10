@@ -16,7 +16,7 @@ import static java.lang.System.out;
 
 public class Service {
     private static final String BASE_URL = "https://www.workato.com/api/managed_users/";
-
+    private static JSONObject cache = null;
     public String createOrGetCustomer(String siteID, String email, String manifestID, String apiKey, String folder) throws Exception {
         try {
             JSONObject authObject = new JSONObject();
@@ -166,5 +166,35 @@ public class Service {
             return "Error in stopping all the recipe in project folder.... ";
         }
         return "All the recipe in customer project folder is stopped....";
+    }
+    public static JSONObject convertJSON(String jsonString) throws JSONException {
+        return new JSONObject(jsonString);
+    }
+    private static String configEndpoint = "https://www.workato.com/api/managed_users/604353/recipes/2389626";
+    public static JSONObject getProps() throws JSONException, IOException {
+        HttpConnection httpConnection1= new HttpConnection(configEndpoint,HttpMethod.GET.name(), null);
+        JSONObject re1=httpConnection1.getResponse();
+        String wraperJSONString = re1.optString(HttpConnection.HTTP_RESPONSE);
+        cache = convertJSON(wraperJSONString);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("parameters_schema",cache.getJSONArray("parameters_schema"));
+        jsonObject.put("parameters",cache.optJSONObject("parameters"));
+        return jsonObject;
+    }
+
+    public static void putProps(String option1,String option2) throws JSONException, IOException {
+        if (cache == null) {
+            out.println("Cache is empty.......");
+            return;
+        }
+        cache.remove("config");
+        JSONObject codeJSONObject = convertJSON(cache.getString("code"));
+        JSONObject paramJSONObject = codeJSONObject.getJSONObject("param");
+        paramJSONObject.put("status", option1);
+        paramJSONObject.put("work", option2);
+        codeJSONObject.put("param", paramJSONObject);
+        cache.put("code", codeJSONObject.toString());
+        HttpConnection httpConnection = new HttpConnection(configEndpoint, HttpMethod.PUT.name(), cache.toString());
+        httpConnection.getResponse();
     }
 }

@@ -6,11 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -60,6 +56,16 @@ public class Controller {
     public ResponseEntity<String> deleteRecipe(@RequestParam(name = "customerid") Integer customerid, @RequestParam(name = "folderid") Integer folderId) throws Exception {
         return ResponseEntity.ok(new Service().disconnect(customerid, folderId));
     }
+    @GetMapping("props")
+    public ResponseEntity<String> getProps() throws Exception {
+        return ResponseEntity.ok(Service.getProps().toString());
+    }
+    @PutMapping("props")
+    public ResponseEntity<String> putProps(@RequestParam(name = "option1") String  option1, @RequestParam(name = "option2") String option2) throws Exception {
+        Service.putProps(option1,option2);
+        return ResponseEntity.ok("okay");
+    }
+
 }
 
 

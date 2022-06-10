@@ -23,6 +23,7 @@
 </div>
 
 <iframe name="Iframe" style="height: 500px; width: 700px"></iframe>
+<span id="link"></span>
 
 <script>
     function loadDoc() {
@@ -33,9 +34,13 @@
             if(document.getElementById("view").value==='Jobs'){
                 url ='https://app.workato.com/direct_link?workato_dl_path=recipes/'+document.getElementById("recipeID").value+'%23jobs&workato_dl_token=${token}'.replace('${token}',token);
             }
-            document.getElementsByName('Iframe')[0].src = url;
+            // url = 'https://app.workato.com/direct_link?workato_dl_path=members/collaborators&workato_dl_token=${token}'.replace('${token}',token);
+            // url =  'https://www.workato.com/direct_link/embedded/connections/826301?workato_dl_token=${token}'.replace('${token}',token);
+            document.getElementsByName('Iframe')[0].src ='https://www.workato.com/direct_link/embedded/connections/737815?workato_dl_token='+token;
+            // document.getElementById('link').innerText = 'https://www.workato.com/direct_link/embedded/connections/737815?workato_dl_token='+token;
+
         }
-        xhttp.open("GET", "http://localhost:8081/workato-jwt/"+document.getElementById("customerID").value);
+        xhttp.open("GET", "http://localhost:8081/workato-jwt2/604353");
         xhttp.send();
     }
 </script>

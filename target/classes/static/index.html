@@ -3,15 +3,46 @@
 <body>
 
 <form action="/api/v1/customer"x>
-  <input type="text" id="manifest_id" size="20" name="manifest_id" placeholder="manifest ID"><br>
-   <input type="text" id="api_key" size="20" name="api_key" placeholder="API Key"><br>
-   <input type="text" id="site" size="20" name="site" placeholder="site"><br>
- <input type="text" id="email" size="20" name="email" placeholder="email"><br><br>
-  <input type="submit" value="Submit"> 
+    <input type="text" id="manifest_id" size="20" name="manifest_id" placeholder="manifest ID">
+    <input type="text" id="api_key" size="20" name="api_key" placeholder="API Key">
+    <input type="text" id="site" size="20" name="site" placeholder="site">
+    <input type="text" id="email" size="20" name="email" placeholder="email">
+    <input type="text" id="folder" size="20" name="folder" placeholder="project folder">
+    <input type="submit" value="Connect">
 </form>
+<h2 id="span1">Workato Iframe </h2>
+<div>
+    <input type="text" id="customerID" size="20" name="customerID" placeholder="customer ID">
+    <input type="text" id="recipeID" size="20" name="recipeID" placeholder="recipe ID">
+    <label for="view">Choose a View:</label>
+    <select name="view" id="view">
+        <option value="DashBoard">DashBoard</option>
+        <option value="Jobs">Jobs</option>
+    </select>
+    <button type="button" onclick="loadDoc()">Show Board</button>
+</div>
+
+<iframe name="Iframe" style="height: 500px; width: 700px"></iframe>
+<span id="link"></span>
 
 <script>
+    function loadDoc() {
+        const xhttp = new XMLHttpRequest();
+        xhttp.onload = function() {
+            let token = this.responseText.substring(1,this.responseText.length-1);
+            let url = 'https://app.workato.com/direct_link?workato_dl_path=%2Fdashboard%2Fmain&workato_dl_token=${token}'.replace('${token}',token);
+            if(document.getElementById("view").value==='Jobs'){
+                url ='https://app.workato.com/direct_link?workato_dl_path=recipes/'+document.getElementById("recipeID").value+'%23jobs&workato_dl_token=${token}'.replace('${token}',token);
+            }
+            // url = 'https://app.workato.com/direct_link?workato_dl_path=members/collaborators&workato_dl_token=${token}'.replace('${token}',token);
+            // url =  'https://www.workato.com/direct_link/embedded/connections/826301?workato_dl_token=${token}'.replace('${token}',token);
+            document.getElementsByName('Iframe')[0].src ='https://www.workato.com/direct_link/embedded/connections/737815?workato_dl_token='+token;
+            // document.getElementById('link').innerText = 'https://www.workato.com/direct_link/embedded/connections/737815?workato_dl_token='+token;
 
+        }
+        xhttp.open("GET", "http://localhost:8081/workato-jwt2/604353");
+        xhttp.send();
+    }
 </script>
 
 </body>

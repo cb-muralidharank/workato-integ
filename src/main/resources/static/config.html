@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Config</title>
+</head>
+<body onload="loadDoc()">
+<div id="id">
+
+</div>
+<button onclick="put()">update</button>
+</body>
+<script>
+    function loadDoc() {
+        const xhttp = new XMLHttpRequest();
+        xhttp.onload = function () {
+            let wrapperObj = JSON.parse(this.responseText);
+            let obj = wrapperObj['parameters_schema'];
+            let obj2 = wrapperObj['parameters'];
+            // alert(obj2['status']);
+            alert(Object.keys(obj2));
+            for (let i = 0; i < obj.length; i++) {
+                let jsonObject = obj[i];
+                // alert(jsonObject['control_type'])
+                if (jsonObject['control_type'] === 'text') {
+                    const span = document.createElement('span');
+                    span.innerHTML = jsonObject['name'];
+                    const input = document.createElement("input");
+                    input.placeholder = jsonObject['hint'];
+                    input.value = ''
+                    input.id = 'wk_text'
+                    document.getElementById("id").appendChild(span).appendChild(input);
+                } else if (jsonObject['control_type'] === 'date_time') {
+
+                } else {
+                    let array = jsonObject['pick_list']
+                    // document.createElement('');
+                    let ol = document.createElement('select');
+                    ol.name = 'options';
+                    ol.id='select';
+                    for (let j = 0; j < array.length; j++) {
+                        let optionElement = document.createElement('option');
+                        // alert(array[j][0])
+                        optionElement.value = array[j][1];
+                        optionElement.innerHTML = array[j][0];
+                        ol.appendChild(optionElement);
+                    }
+                    const label = document.createElement('label');
+                    label.htmlFor = 'options'
+                    label.innerHTML = 'select option'
+                    document.getElementById("id").appendChild(label);
+                    document.getElementById("id").appendChild(ol);
+                }
+            }
+            document.getElementById('wk_text').value=obj2['status'];
+            document.getElementById('select').value=obj2['work'];
+            // document.getElementById("id").innerHTML=this.responseText;
+        }
+        xhttp.open("GET", "http://localhost:8080/api/v1/props");
+        xhttp.send();
+    }
+
+    function put() {
+        const xhttp = new XMLHttpRequest();
+        xhttp.open("PUT", "http://localhost:8080/api/v1/props?option1="+document.getElementById('wk_text').value+"&option2="+document.getElementById('select').value);
+        xhttp.send();
+    }
+</script>
+
+</html>
