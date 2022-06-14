@@ -160,7 +160,7 @@ public class Service {
         return list;
     }
 
-    public String disconnect(Integer managedUserID, Integer folderID) throws JSONException, IOException {
+    public String stopRecipe(Integer managedUserID, Integer folderID) throws JSONException, IOException {
         boolean isThereErrors = changeRecipeState(managedUserID, folderID, false);
         if (isThereErrors) {
             return "Error in stopping all the recipe in project folder.... ";
@@ -170,9 +170,10 @@ public class Service {
     public static JSONObject convertJSON(String jsonString) throws JSONException {
         return new JSONObject(jsonString);
     }
-    private static String configEndpoint = "https://www.workato.com/api/managed_users/604353/recipes/2389626";
-    public static JSONObject getProps() throws JSONException, IOException {
-        HttpConnection httpConnection1= new HttpConnection(configEndpoint,HttpMethod.GET.name(), null);
+//    private static String configEndpoint = "https://www.workato.com/api/managed_users/604353/recipes/2389626";
+//    private static final String configEndpoint = "https://www.workato.com/api/managed_users/604353/recipes/";
+    public static JSONObject getProps(String integID,String customerID) throws JSONException, IOException {
+        HttpConnection httpConnection1= new HttpConnection(getConfigEndpoint(customerID)+integID,HttpMethod.GET.name(), null);
         JSONObject re1=httpConnection1.getResponse();
         String wraperJSONString = re1.optString(HttpConnection.HTTP_RESPONSE);
         cache = convertJSON(wraperJSONString);
@@ -182,7 +183,7 @@ public class Service {
         return jsonObject;
     }
 
-    public static void putProps(String option1,String option2) throws JSONException, IOException {
+    public static void putProps(String integID,String option1,String option2,String customerID) throws JSONException, IOException {
         if (cache == null) {
             out.println("Cache is empty.......");
             return;
@@ -194,7 +195,11 @@ public class Service {
         paramJSONObject.put("work", option2);
         codeJSONObject.put("param", paramJSONObject);
         cache.put("code", codeJSONObject.toString());
-        HttpConnection httpConnection = new HttpConnection(configEndpoint, HttpMethod.PUT.name(), cache.toString());
+        HttpConnection httpConnection = new HttpConnection(getConfigEndpoint(customerID) + integID, HttpMethod.PUT.name(), cache.toString());
         httpConnection.getResponse();
+    }
+
+    public static String getConfigEndpoint(String customerID){
+        return "https://www.workato.com/api/managed_users/"+customerID+"/recipes/";
     }
 }

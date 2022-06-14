@@ -54,15 +54,15 @@ public class Controller {
 
     @GetMapping("deleterecipe")
     public ResponseEntity<String> deleteRecipe(@RequestParam(name = "customerid") Integer customerid, @RequestParam(name = "folderid") Integer folderId) throws Exception {
-        return ResponseEntity.ok(new Service().disconnect(customerid, folderId));
+        return ResponseEntity.ok(new Service().stopRecipe(customerid, folderId));
     }
     @GetMapping("props")
-    public ResponseEntity<String> getProps() throws Exception {
-        return ResponseEntity.ok(Service.getProps().toString());
+    public ResponseEntity<String> getProps(@RequestParam(name = "integ") String  integID,@RequestParam(name = "cust_id") String  customerID) throws Exception {
+        return ResponseEntity.ok(Service.getProps(integID,customerID).toString());
     }
     @PutMapping("props")
-    public ResponseEntity<String> putProps(@RequestParam(name = "option1") String  option1, @RequestParam(name = "option2") String option2) throws Exception {
-        Service.putProps(option1,option2);
+    public ResponseEntity<String> putProps(@RequestParam(name = "integ") String  integID,@RequestParam(name = "option1") String  option1, @RequestParam(name = "option2") String option2,@RequestParam(name = "cust_id") String  customerID) throws Exception {
+        Service.putProps(integID,option1,option2,customerID);
         return ResponseEntity.ok("okay");
     }
 
